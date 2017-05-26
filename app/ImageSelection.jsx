@@ -21,12 +21,17 @@ class ImageSelection extends React.Component {
 
     render() {
         return (
-            <section className="image-selection">
-                <ul>
+            <section className="page">
+                <h1>Select An Image</h1>
+                <section className="image-selection">
                     {this.state.options.map((item) => {
-                        return <li key={item}><img src={item}/></li>
+                        return (
+                            <figure key={item}>
+                                <img src={item}/>
+                            </figure>
+                        )
                     })}
-                </ul>
+                </section>
             </section>
         )
     }

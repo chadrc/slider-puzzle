@@ -1,14 +1,18 @@
 
 .image-selection {
-
-  > ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  > figure {
+    margin: 0;
+    padding: 10px;
     list-style: none;
-    display: flex;
-    > li {
-      width: 25%;
-      > img {
-        max-width: 100%;
-      }
+    width: 25%;
+    cursor: pointer;
+    box-sizing: border-box;
+
+    > img {
+      max-width: 100%;
     }
   }
 }
