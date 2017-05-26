@@ -19,6 +19,12 @@ class ImageSelection extends React.Component {
         }
     }
 
+    raiseOnClick(item) {
+        if (this.props.onClick) {
+            this.props.onClick(item);
+        }
+    }
+
     render() {
         return (
             <section className="page">
@@ -26,7 +32,7 @@ class ImageSelection extends React.Component {
                 <section className="image-selection">
                     {this.state.options.map((item) => {
                         return (
-                            <figure key={item}>
+                            <figure key={item} onClick={() => this.raiseOnClick(item)}>
                                 <img src={item}/>
                             </figure>
                         )
