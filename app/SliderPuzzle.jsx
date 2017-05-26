@@ -12,21 +12,13 @@ class SliderPuzzle extends React.Component {
         super(props);
 
         this.state = {
-            selectedImage: "",
+            selectedImage: this.props.image,
             status: Choosing,
             tiles: []
         }
     }
 
-    imageSelected(image) {
-        this.setState({
-            selectedImage: image,
-            status: Playing
-        })
-    }
-
     componentDidMount() {
-        return;
         let image = new Image();
         image.addEventListener("load", () => {
             console.dir(image);
@@ -148,28 +140,19 @@ class SliderPuzzle extends React.Component {
     }
 
     render() {
-        switch (this.state.status) {
-            case Choosing:
-                return <ImageSelection onClick={(item) => this.imageSelected(item)} />;
-
-            case Playing:
-                return (
-                    <section>
-                        <canvas ref={(ele) => this.canvas = ele} onClick={(e) => {
-                            console.log(e);
-                            this.canvasClick(e)
-                        }} />
-                        <section>
-                            <img ref={(ele) => this.displayImage = ele}
-                                 src={this.state.selectedImage}
-                                 onLoad={() => this.displayImageLoad()} />
-                        </section>
-                    </section>
-                );
-
-            case Won:
-                // TODO
-        }
+        return (
+            <section>
+                <canvas ref={(ele) => this.canvas = ele} onClick={(e) => {
+                    console.log(e);
+                    this.canvasClick(e)
+                }} />
+                <section>
+                    <img ref={(ele) => this.displayImage = ele}
+                         src={this.state.selectedImage}
+                         onLoad={() => this.displayImageLoad()} />
+                </section>
+            </section>
+        );
     }
 
     componentDidUpdate() {
