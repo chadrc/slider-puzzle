@@ -2,13 +2,21 @@ const path = require("path");
 const webpack = require("webpack");
 
 module.exports = {
+    context: path.resolve(__dirname, "app"),
     entry: {
+        patch: 'react-hot-loader/patch',
+        server: 'webpack-dev-server/client?http://localhost:3000',
+        webpack: 'webpack/hot/only-dev-server',
         app: "./app.jsx",
         vendor: ["react", "react-dom"]
     },
 
+    devtool: "inline-source-map",
+
     output: {
-        filename: "app.bundle.js"
+        filename: "[name].bundle.js",
+        path: path.resolve(__dirname, "dist"),
+        publicPath: "/"
     },
 
     resolve: {
@@ -28,17 +36,29 @@ module.exports = {
                     "css-loader",
                     "sass-loader"
                 ]
+            },
+            {
+                test: /\.html$/,
+                use: [
+                    "file-loader?name=[path][name].[ext]",
+                    "extract-loader",
+                    "html-loader"
+                ]
             }
         ]
     },
 
     devServer: {
-        contentBase: path.resolve(__dirname),
+        contentBase: path.resolve(__dirname, "dist"),
+        publicPath: "/",
         compress: true,
-        port: 3000
+        port: 3000,
+        hot: true
     },
 
     plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NamedModulesPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: "vendor",
             filename: "vendor.bundle.js",

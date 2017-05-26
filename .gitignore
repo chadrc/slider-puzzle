@@ -1,5 +1,6 @@
 # Custom
-*.bundle.js
+dist/*
+!dist/images/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template
