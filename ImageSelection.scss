@@ -1,0 +1,14 @@
+
+.image-selection {
+
+  > ul {
+    list-style: none;
+    display: flex;
+    > li {
+      width: 25%;
+      > img {
+        max-width: 100%;
+      }
+    }
+  }
+}

@@ -1,6 +1,8 @@
 import * as React from "react";
 import ImageSelection from "./ImageSelection";
 
+import "./SliderPuzzle.scss";
+
 const Choosing = 1;
 const Playing = 2;
 const Won = 3;
@@ -17,6 +19,7 @@ class SliderPuzzle extends React.Component {
     }
 
     componentDidMount() {
+        return;
         let image = new Image();
         image.addEventListener("load", () => {
             console.dir(image);

@@ -1,5 +1,5 @@
 # Custom
-app.bundle.js
+*.bundle.js
 
 # Created by .ignore support plugin (hsz.mobi)
 ### JetBrains template

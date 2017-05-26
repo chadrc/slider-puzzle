@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import "./ImageSelection.scss";
+
 class ImageSelection extends React.Component {
     constructor(props) {
         super(props);
@@ -19,7 +21,7 @@ class ImageSelection extends React.Component {
 
     render() {
         return (
-            <section>
+            <section className="image-selection">
                 <ul>
                     {this.state.options.map((item) => {
                         return <li key={item}><img src={item}/></li>
