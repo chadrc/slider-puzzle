@@ -141,7 +141,8 @@ class SliderPuzzle extends React.Component {
 
     render() {
         return (
-            <section>
+            <section className="page">
+                <h1>Solve</h1>
                 <canvas ref={(ele) => this.canvas = ele} onClick={(e) => {
                     console.log(e);
                     this.canvasClick(e)
