@@ -64,7 +64,7 @@ window.addEventListener("load", () => {
 
             render();
 
-            canvas.addEventListener("click", (event) => {
+            let canvasClick = (event) => {
                 let x = event.offsetX;
                 let y = event.offsetY;
                 for (let tile of tiles) {
@@ -91,8 +91,9 @@ window.addEventListener("load", () => {
                             hiddenTile.x = oldX;
                             hiddenTile.y = oldY;
 
-                            render();
-
+                            // Check for win
+                            // draw X and Y are technically the starting positions,
+                            // so if all tiles x and y equal those, the game is won
                             let win = true;
                             for (let tile of tiles) {
                                 if (tile.x !== tile.drawX || tile.y !== tile.drawY) {
@@ -102,12 +103,17 @@ window.addEventListener("load", () => {
                             }
 
                             if (win) {
-                                console.log("win");
+                                hiddenTile.hidden = false;
+                                canvas.removeEventListener("click", canvasClick);
                             }
+
+                            render();
                         }
                     }
                 }
-            });
+            };
+
+            canvas.addEventListener("click", canvasClick);
         });
         original.src = image.src;
     });
