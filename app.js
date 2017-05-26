@@ -31,6 +31,19 @@ window.addEventListener("load", () => {
                 }
             }
 
+            // Shuffle Tiles
+            for (let i=0; i<tiles.length; i++) {
+                let tile = tiles[i];
+                let roll = Math.floor(Math.random() * (tiles.length - i));
+                let sTile = tiles[roll];
+
+                let temp = {x: tile.x, y: tile.y};
+                tile.x = sTile.x;
+                tile.y = sTile.y;
+                sTile.x = temp.x;
+                sTile.y = temp.y;
+            }
+
             let roll = Math.floor(Math.random() * tiles.length);
             let hiddenTile = tiles[roll];
             hiddenTile.hidden = true;
@@ -79,6 +92,18 @@ window.addEventListener("load", () => {
                             hiddenTile.y = oldY;
 
                             render();
+
+                            let win = true;
+                            for (let tile of tiles) {
+                                if (tile.x !== tile.drawX || tile.y !== tile.drawY) {
+                                    win = false;
+                                    break;
+                                }
+                            }
+
+                            if (win) {
+                                console.log("win");
+                            }
                         }
                     }
                 }
