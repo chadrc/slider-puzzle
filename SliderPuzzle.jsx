@@ -1,4 +1,5 @@
 import * as React from "react";
+import ImageSelection from "./ImageSelection";
 
 const Choosing = 1;
 const Playing = 2;
@@ -9,8 +10,8 @@ class SliderPuzzle extends React.Component {
         super(props);
 
         this.state = {
-            selectedImage: "images/wolf001.jpg",
-            status: Playing,
+            selectedImage: "",
+            status: Choosing,
             tiles: []
         }
     }
@@ -137,6 +138,28 @@ class SliderPuzzle extends React.Component {
     }
 
     render() {
+        switch (this.state.status) {
+            case Choosing:
+                return <ImageSelection />;
+
+            case Playing:
+                return (
+                    <section>
+                        <canvas ref={(ele) => this.canvas = ele} onClick={(e) => {
+                            console.log(e);
+                            this.canvasClick(e)
+                        }} />
+                        <section>
+                            <img ref={(ele) => this.displayImage = ele}
+                                 src={this.state.selectedImage}
+                                 onLoad={() => this.displayImageLoad()} />
+                        </section>
+                    </section>
+                );
+
+            case Won:
+                // TODO
+        }
         return (
             <section>
                 <canvas ref={(ele) => this.canvas = ele} onClick={(e) => {
