@@ -1,11 +1,6 @@
 import * as React from "react";
-import ImageSelection from "./ImageSelection";
 
 import "./SliderPuzzle.scss";
-
-const Choosing = 1;
-const Playing = 2;
-const Won = 3;
 
 class SliderPuzzle extends React.Component {
     constructor(props) {
@@ -13,7 +8,6 @@ class SliderPuzzle extends React.Component {
 
         this.state = {
             selectedImage: this.props.image,
-            status: Choosing,
             tiles: []
         }
     }
@@ -21,7 +15,6 @@ class SliderPuzzle extends React.Component {
     componentDidMount() {
         let image = new Image();
         image.addEventListener("load", () => {
-            console.dir(image);
             this.displayImage.src = image.src;
         });
         image.src = this.state.selectedImage;
@@ -84,13 +77,10 @@ class SliderPuzzle extends React.Component {
     }
 
     canvasClick(event) {
-        if (this.state.status !== Playing) {
-            return;
-        }
-
         let canvasRect = this.canvas.getBoundingClientRect();
         let x = event.clientX - canvasRect.left;
         let y = event.clientY - canvasRect.top;
+
         for (let tile of this.state.tiles) {
             let tileX = tile.x * this.state.scale;
             let tileY = tile.y * this.state.scale;
@@ -143,10 +133,7 @@ class SliderPuzzle extends React.Component {
         return (
             <section className="page">
                 <h1>Solve</h1>
-                <canvas ref={(ele) => this.canvas = ele} onClick={(e) => {
-                    console.log(e);
-                    this.canvasClick(e)
-                }} />
+                <canvas ref={(ele) => this.canvas = ele} onClick={(e) => this.canvasClick(e)} />
                 <section>
                     <img ref={(ele) => this.displayImage = ele}
                          src={this.state.selectedImage}
