@@ -1,3 +1,4 @@
+const path = require("path");
 
 module.exports = {
     entry: "./app.jsx",
@@ -18,5 +19,11 @@ module.exports = {
                 use: "babel-loader"
             }
         ]
+    },
+
+    devServer: {
+        contentBase: path.resolve(__dirname),
+        compress: true,
+        port: 3000
     }
 };
