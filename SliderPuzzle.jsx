@@ -1,142 +1,167 @@
 import * as React from "react";
 
+const Choosing = 1;
+const Playing = 2;
+const Won = 3;
+
 class SliderPuzzle extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            selectedImage: "",
+            selectedImage: "images/wolf001.jpg",
+            status: Playing,
+            tiles: []
         }
     }
 
     componentDidMount() {
-        let context = this.canvas.getContext("2d");
         let image = new Image();
         image.addEventListener("load", () => {
-
-            this.displayImage.addEventListener("load", () => {
-                this.canvas.height = this.displayImage.height;
-                this.canvas.width = this.displayImage.width;
-
-                // Make slices
-
-                let count = 3;
-                let tileHeight = image.height/count;
-                let tileWidth = image.width/count;
-                let tiles = [];
-
-                for (let row=0; row<count; row++) {
-                    for (let col = 0; col < count; col++) {
-                        let x = row * tileWidth;
-                        let y = col * tileHeight;
-                        tiles.push({
-                            x: x,
-                            y: y,
-                            drawX: x,
-                            drawY: y
-                        });
-                    }
-                }
-
-                // Shuffle Tiles
-                for (let i=0; i<tiles.length; i++) {
-                    let tile = tiles[i];
-                    let roll = Math.floor(Math.random() * (tiles.length - i));
-                    let sTile = tiles[roll];
-
-                    let temp = {x: tile.x, y: tile.y};
-                    tile.x = sTile.x;
-                    tile.y = sTile.y;
-                    sTile.x = temp.x;
-                    sTile.y = temp.y;
-                }
-
-                let roll = Math.floor(Math.random() * tiles.length);
-                let hiddenTile = tiles[roll];
-                hiddenTile.hidden = true;
-
-                let scale = this.displayImage.width / image.width;
-
-                let render = () => {
-                    context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                    for (let tile of tiles) {
-                        if (tile.hidden) {
-                            continue;
-                        }
-                        context.drawImage(image,
-                            tile.drawX, tile.drawY, tileWidth, tileHeight,
-                            tile.x * scale, tile.y * scale, tileWidth * scale, tileHeight * scale);
-                    }
-                };
-
-                render();
-
-                let canvasClick = (event) => {
-                    let x = event.offsetX;
-                    let y = event.offsetY;
-                    for (let tile of tiles) {
-                        let tileX = tile.x * scale;
-                        let tileY = tile.y * scale;
-                        let tileW = (tileWidth * scale) + tileX;
-                        let tileH = (tileHeight * scale) + tileY;
-                        if (x > tileX && x < tileW && y > tileY && y < tileH) {
-                            // Clicked a tile
-                            if (tile === hiddenTile) {
-                                // Clicked hidden tile, do nothing
-                                return;
-                            }
-                            let hiddenTileX = hiddenTile.x * scale;
-                            let hiddenTileY = hiddenTile.y * scale;
-                            if (hiddenTileX === tileX && Math.abs(hiddenTileY - tileY) === tileHeight * scale
-                                || hiddenTileY === tileY && Math.abs(hiddenTileX - tileX) === tileWidth * scale) {
-                                // Clicked tile is next to hidden one
-                                let oldX = tile.x;
-                                let oldY = tile.y;
-
-                                tile.x = hiddenTile.x;
-                                tile.y = hiddenTile.y;
-                                hiddenTile.x = oldX;
-                                hiddenTile.y = oldY;
-
-                                // Check for win
-                                // draw X and Y are technically the starting positions,
-                                // so if all tiles x and y equal those, the game is won
-                                let win = true;
-                                for (let tile of tiles) {
-                                    if (tile.x !== tile.drawX || tile.y !== tile.drawY) {
-                                        win = false;
-                                        break;
-                                    }
-                                }
-
-                                if (win) {
-                                    hiddenTile.hidden = false;
-                                    this.canvas.removeEventListener("click", canvasClick);
-                                }
-
-                                render();
-                            }
-                        }
-                    }
-                };
-
-                this.canvas.addEventListener("click", canvasClick);
-            });
+            console.dir(image);
             this.displayImage.src = image.src;
         });
+        image.src = this.state.selectedImage;
 
-        image.src = "images/wolf001.jpg";
+        this.setState({
+            image: image
+        })
+    }
+
+    displayImageLoad() {
+        this.canvas.height = this.displayImage.height;
+        this.canvas.width = this.displayImage.width;
+
+        // Make slices
+        let count = 3;
+        let tileHeight = this.state.image.height/count;
+        let tileWidth = this.state.image.width/count;
+        let tiles = [];
+
+        for (let row=0; row<count; row++) {
+            for (let col = 0; col < count; col++) {
+                let x = row * tileWidth;
+                let y = col * tileHeight;
+                tiles.push({
+                    x: x,
+                    y: y,
+                    drawX: x,
+                    drawY: y
+                });
+            }
+        }
+
+        // Shuffle Tiles
+        for (let i=0; i<tiles.length; i++) {
+            let tile = tiles[i];
+            let roll = Math.floor(Math.random() * (tiles.length - i));
+            let sTile = tiles[roll];
+
+            let temp = {x: tile.x, y: tile.y};
+            tile.x = sTile.x;
+            tile.y = sTile.y;
+            sTile.x = temp.x;
+            sTile.y = temp.y;
+        }
+
+        let roll = Math.floor(Math.random() * tiles.length);
+        let hiddenTile = tiles[roll];
+        hiddenTile.hidden = true;
+
+        let scale = this.displayImage.width / this.state.image.width;
+
+        this.setState({
+            tiles: tiles,
+            scale: scale,
+            hiddenTile: hiddenTile,
+            count: count,
+            tileHeight: tileHeight,
+            tileWidth: tileWidth
+        });
+    }
+
+    canvasClick(event) {
+        if (this.state.status !== Playing) {
+            return;
+        }
+
+        let x = event.offsetX;
+        let y = event.offsetY;
+        for (let tile of this.state.tiles) {
+            let tileX = tile.x * this.state.scale;
+            let tileY = tile.y * this.state.scale;
+            let tileW = (this.state.tileWidth * this.state.scale) + tileX;
+            let tileH = (this.state.tileHeight * this.state.scale) + tileY;
+            if (x > tileX && x < tileW && y > tileY && y < tileH) {
+                // Clicked a tile
+                if (tile === this.state.hiddenTile) {
+                    // Clicked hidden tile, do nothing
+                    return;
+                }
+                let hiddenTileX = this.state.hiddenTile.x * this.state.scale;
+                let hiddenTileY = this.state.hiddenTile.y * this.state.scale;
+                if (hiddenTileX === tileX && Math.abs(hiddenTileY - tileY) === this.state.tileHeight * this.state.scale
+                    || hiddenTileY === tileY && Math.abs(hiddenTileX - tileX) === this.state.tileWidth * this.state.scale) {
+                    // Clicked tile is next to hidden one
+                    let oldX = tile.x;
+                    let oldY = tile.y;
+
+                    tile.x = this.state.hiddenTile.x;
+                    tile.y = this.state.hiddenTile.y;
+                    this.state.hiddenTile.x = oldX;
+                    this.state.hiddenTile.y = oldY;
+
+                    // Check for win
+                    // draw X and Y are technically the starting positions,
+                    // so if all tiles x and y equal those, the game is won
+                    let win = true;
+                    for (let tile of this.state.tiles) {
+                        if (tile.x !== tile.drawX || tile.y !== tile.drawY) {
+                            win = false;
+                            break;
+                        }
+                    }
+
+                    if (win) {
+                        this.state.hiddenTile.hidden = false;
+                    }
+
+                    this.setState({
+                        tiles: this.state.tiles,
+                        hiddenTile: this.state.hiddenTile
+                    })
+                }
+            }
+        }
     }
 
     render() {
         return (
             <section>
-                <canvas ref={(ele) => this.canvas = ele} />
+                <canvas ref={(ele) => this.canvas = ele} onClick={(e) => this.canvasClick(e)} />
                 <section>
-                    <img ref={(ele) => this.displayImage = ele} src={this.state.selectedImage} />
+                    <img ref={(ele) => this.displayImage = ele}
+                         src={this.state.selectedImage}
+                         onLoad={() => this.displayImageLoad()} />
                 </section>
             </section>
         )
+    }
+
+    componentDidUpdate() {
+        let context = this.canvas.getContext("2d");
+        context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        for (let tile of this.state.tiles) {
+            if (tile.hidden) {
+                continue;
+            }
+            context.drawImage(this.state.image,
+                tile.drawX, tile.drawY,
+                this.state.tileWidth, this.state.tileHeight,
+
+                tile.x * this.state.scale, tile.y * this.state.scale,
+                this.state.tileWidth * this.state.scale, this.state.tileHeight * this.state.scale);
+        }
     }
 }
 
