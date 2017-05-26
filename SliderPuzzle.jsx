@@ -85,8 +85,9 @@ class SliderPuzzle extends React.Component {
             return;
         }
 
-        let x = event.offsetX;
-        let y = event.offsetY;
+        let canvasRect = this.canvas.getBoundingClientRect();
+        let x = event.clientX - canvasRect.left;
+        let y = event.clientY - canvasRect.top;
         for (let tile of this.state.tiles) {
             let tileX = tile.x * this.state.scale;
             let tileY = tile.y * this.state.scale;
@@ -138,7 +139,10 @@ class SliderPuzzle extends React.Component {
     render() {
         return (
             <section>
-                <canvas ref={(ele) => this.canvas = ele} onClick={(e) => this.canvasClick(e)} />
+                <canvas ref={(ele) => this.canvas = ele} onClick={(e) => {
+                    console.log(e);
+                    this.canvasClick(e)
+                }} />
                 <section>
                     <img ref={(ele) => this.displayImage = ele}
                          src={this.state.selectedImage}
