@@ -28,7 +28,8 @@ window.addEventListener("load", () => {
             }
 
             let roll = Math.floor(Math.random() * tiles.length);
-            tiles[roll].hidden = true;
+            let hiddenTile = tiles[roll];
+            hiddenTile.hidden = true;
 
             let scale = original.width / image.width;
             for (let tile of tiles) {
@@ -39,6 +40,31 @@ window.addEventListener("load", () => {
                     tile.x, tile.y, tileWidth, tileHeight,
                     tile.x * scale, tile.y * scale, tileWidth * scale, tileHeight * scale);
             }
+
+            canvas.addEventListener("click", (event) => {
+                let x = event.offsetX;
+                let y = event.offsetY;
+                for (let tile of tiles) {
+                    let tileX = tile.x * scale;
+                    let tileY = tile.y * scale;
+                    let tileW = (tileWidth * scale) + tileX;
+                    let tileH = (tileHeight * scale) + tileY;
+                    if (x > tileX && x < tileW && y > tileY && y < tileH) {
+                        // Clicked a tile
+                        if (tile === hiddenTile) {
+                            // Clicked hidden tile, do nothing
+                            return;
+                        }
+                        let hiddenTileX = hiddenTile.x * scale;
+                        let hiddenTileY = hiddenTile.y * scale;
+                        if (hiddenTileX === tileX && Math.abs(hiddenTileY - tileY) === tileHeight * scale
+                            || hiddenTileY === tileY && Math.abs(hiddenTileX - tileX) === tileWidth * scale) {
+                            // Clicked tile is next to hidden one
+                            console.log("move click");
+                        }
+                    }
+                }
+            });
         });
         original.src = image.src;
     });
