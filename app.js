@@ -20,9 +20,13 @@ window.addEventListener("load", () => {
 
             for (let row=0; row<count; row++) {
                 for (let col = 0; col < count; col++) {
+                    let x = row * tileWidth;
+                    let y = col * tileHeight;
                     tiles.push({
-                        x: row * tileWidth,
-                        y: col * tileHeight
+                        x: x,
+                        y: y,
+                        drawX: x,
+                        drawY: y
                     });
                 }
             }
@@ -32,14 +36,20 @@ window.addEventListener("load", () => {
             hiddenTile.hidden = true;
 
             let scale = original.width / image.width;
-            for (let tile of tiles) {
-                if (tile.hidden) {
-                    continue;
+
+            let render = () => {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                for (let tile of tiles) {
+                    if (tile.hidden) {
+                        continue;
+                    }
+                    context.drawImage(image,
+                        tile.drawX, tile.drawY, tileWidth, tileHeight,
+                        tile.x * scale, tile.y * scale, tileWidth * scale, tileHeight * scale);
                 }
-                context.drawImage(image,
-                    tile.x, tile.y, tileWidth, tileHeight,
-                    tile.x * scale, tile.y * scale, tileWidth * scale, tileHeight * scale);
-            }
+            };
+
+            render();
 
             canvas.addEventListener("click", (event) => {
                 let x = event.offsetX;
@@ -60,7 +70,15 @@ window.addEventListener("load", () => {
                         if (hiddenTileX === tileX && Math.abs(hiddenTileY - tileY) === tileHeight * scale
                             || hiddenTileY === tileY && Math.abs(hiddenTileX - tileX) === tileWidth * scale) {
                             // Clicked tile is next to hidden one
-                            console.log("move click");
+                            let oldX = tile.x;
+                            let oldY = tile.y;
+
+                            tile.x = hiddenTile.x;
+                            tile.y = hiddenTile.y;
+                            hiddenTile.x = oldX;
+                            hiddenTile.y = oldY;
+
+                            render();
                         }
                     }
                 }
