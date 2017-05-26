@@ -6,15 +6,39 @@ window.addEventListener("load", () => {
 
     let image = new Image();
     image.addEventListener("load", () => {
-        console.log(`(${image.width}, ${image.height})`);
 
         original.addEventListener("load", () => {
             canvas.height = original.height;
             canvas.width = original.width;
 
-            context.drawImage(image,
-                0, 0, image.width, image.height,
-                0, 0, original.width, original.height);
+            // Make slices
+
+            let count = 3;
+            let tileHeight = image.height/count;
+            let tileWidth = image.width/count;
+            let tiles = [];
+
+            for (let row=0; row<count; row++) {
+                for (let col = 0; col < count; col++) {
+                    tiles.push({
+                        x: row * tileWidth,
+                        y: col * tileHeight
+                    });
+                }
+            }
+
+            let roll = Math.floor(Math.random() * tiles.length);
+            tiles[roll].hidden = true;
+
+            let scale = original.width / image.width;
+            for (let tile of tiles) {
+                if (tile.hidden) {
+                    continue;
+                }
+                context.drawImage(image,
+                    tile.x, tile.y, tileWidth, tileHeight,
+                    tile.x * scale, tile.y * scale, tileWidth * scale, tileHeight * scale);
+            }
         });
         original.src = image.src;
     });
