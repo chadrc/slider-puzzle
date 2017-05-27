@@ -49,17 +49,17 @@ class SliderPuzzle extends React.Component {
         }
 
         // Shuffle Tiles
-        // for (let i=0; i<tiles.length; i++) {
-        //     let tile = tiles[i];
-        //     let roll = Math.floor(Math.random() * (tiles.length - i));
-        //     let sTile = tiles[roll];
-        //
-        //     let temp = {x: tile.x, y: tile.y};
-        //     tile.x = sTile.x;
-        //     tile.y = sTile.y;
-        //     sTile.x = temp.x;
-        //     sTile.y = temp.y;
-        // }
+        for (let i=0; i<tiles.length; i++) {
+            let tile = tiles[i];
+            let roll = Math.floor(Math.random() * (tiles.length - i));
+            let sTile = tiles[roll];
+
+            let temp = {x: tile.x, y: tile.y};
+            tile.x = sTile.x;
+            tile.y = sTile.y;
+            sTile.x = temp.x;
+            sTile.y = temp.y;
+        }
 
         let roll = Math.floor(Math.random() * tiles.length);
         let hiddenTile = tiles[roll];
