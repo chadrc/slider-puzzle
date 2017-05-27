@@ -1,5 +1,5 @@
 # slider-puzzle
-Slider puzzle game for web canvas. Made with React, Webpack, and Sass.
+Slider puzzle game for web canvas. Made using React, Webpack, and Sass.
 
 ### Run Instructions
 ```bash
