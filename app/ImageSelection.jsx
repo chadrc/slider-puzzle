@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 
 import "./ImageSelection.scss";
 
@@ -42,5 +43,9 @@ class ImageSelection extends React.Component {
         )
     }
 }
+
+ImageSelection.propTypes = {
+    onClick: PropTypes.func
+};
 
 export default ImageSelection;

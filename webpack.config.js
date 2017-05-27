@@ -8,7 +8,7 @@ module.exports = {
         server: 'webpack-dev-server/client?http://localhost:3000',
         webpack: 'webpack/hot/only-dev-server',
         app: "./app.jsx",
-        vendor: ["react", "react-dom"]
+        vendor: ["react", "react-dom", "prop-types"]
     },
 
     devtool: "inline-source-map",

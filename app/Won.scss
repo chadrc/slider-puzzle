@@ -1,0 +1,16 @@
+
+.page.won {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  > button {
+    margin: .5em;
+    font-size: 2em;
+    background-color: azure;
+    outline: none;
+    border: 3px solid darkcyan;
+    padding: .5em 1em;
+    cursor: pointer;
+  }
+}

@@ -1,4 +1,5 @@
 import * as React from "react";
+import PropTypes from 'prop-types';
 
 import "./SliderPuzzle.scss";
 
@@ -48,17 +49,17 @@ class SliderPuzzle extends React.Component {
         }
 
         // Shuffle Tiles
-        for (let i=0; i<tiles.length; i++) {
-            let tile = tiles[i];
-            let roll = Math.floor(Math.random() * (tiles.length - i));
-            let sTile = tiles[roll];
-
-            let temp = {x: tile.x, y: tile.y};
-            tile.x = sTile.x;
-            tile.y = sTile.y;
-            sTile.x = temp.x;
-            sTile.y = temp.y;
-        }
+        // for (let i=0; i<tiles.length; i++) {
+        //     let tile = tiles[i];
+        //     let roll = Math.floor(Math.random() * (tiles.length - i));
+        //     let sTile = tiles[roll];
+        //
+        //     let temp = {x: tile.x, y: tile.y};
+        //     tile.x = sTile.x;
+        //     tile.y = sTile.y;
+        //     sTile.x = temp.x;
+        //     sTile.y = temp.y;
+        // }
 
         let roll = Math.floor(Math.random() * tiles.length);
         let hiddenTile = tiles[roll];
@@ -117,12 +118,13 @@ class SliderPuzzle extends React.Component {
                     }
 
                     if (win) {
-                        this.state.hiddenTile.hidden = false;
+                        if (this.props.onSolve) {
+                            this.props.onSolve();
+                        }
                     }
 
                     this.setState({
-                        tiles: this.state.tiles,
-                        hiddenTile: this.state.hiddenTile
+                        tiles: this.state.tiles
                     })
                 }
             }
@@ -159,5 +161,9 @@ class SliderPuzzle extends React.Component {
         }
     }
 }
+
+SliderPuzzle.propTypes = {
+    onSolve: PropTypes.func
+};
 
 export default SliderPuzzle;
